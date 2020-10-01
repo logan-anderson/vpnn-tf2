@@ -2,6 +2,31 @@ import tensorflow as tf
 import numpy as np
 
 
+def customPremute(dim, max=40):
+    # take a number and put it in the top 5 available spots
+    # prem = [-1 for i in range(dim)]
+    perm = []
+
+    # numbers from 0 to dim-1
+    numbers = [i for i in range(dim)]
+
+    currentMax = np.array(numbers[:max])
+
+    for i in range(dim):
+
+        #  shuffle the current top
+        temp = np.array(currentMax)
+        np.random.shuffle(temp)
+        currentMax = asdf.tolist()
+
+        perm.append(currentMax.pop(0))
+
+        if(i+max < dim):
+            currentMax.append(numbers[i+max])
+
+    return perm
+
+
 class Permutation(tf.keras.layers.Layer):
     def __init__(self, seed=None, **kwargs):
         super().__init__(**kwargs)
@@ -20,7 +45,10 @@ class Permutation(tf.keras.layers.Layer):
         dim = input_shape[-1]
         if self.seed:
             np.random.seed(self.seed)
-        self.permutation = np.random.permutation(dim)
+        # self.permutation = np.random.permutation(dim)
+        # self.permutation = np.arange(dim)
+        self.permutation = customPremute(dim)
+        print(self.permutation)
         super().build(input_shape)
 
     def call(self, inputs, **kwargs):
@@ -45,7 +73,8 @@ class Rotation(tf.keras.layers.Layer):
     def build(self, input_shape):
         self.units = input_shape[-1]
         if self.units % 2 == 1:
-            raise ValueError('Rotation layer only works on an even number of inputs')
+            raise ValueError(
+                'Rotation layer only works on an even number of inputs')
         self.theta = self.add_weight(name='theta',
                                      initializer=self.theta_initializer,
                                      shape=(self.units//2,))
@@ -149,6 +178,7 @@ class KernelWrapper(tf.keras.layers.Layer):
     is not implemented as a matrix but may be desired to sometimes
     be treated as such.
     """
+
     def __init__(self, layer, clip_args=None, **kwargs):
         """
         creates a kernel wrapper
