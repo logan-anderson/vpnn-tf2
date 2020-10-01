@@ -9,6 +9,7 @@ def customPremute(dim, max=5):
     # numbers from 0 to dim-1
     numbers = [i for i in range(dim)]
 
+    # starts at [0 to max-1]
     currentMax = np.array(numbers[:max])
 
     for i in range(dim):
