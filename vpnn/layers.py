@@ -17,7 +17,7 @@ def customPremute(dim, max=40):
         #  shuffle the current top
         temp = np.array(currentMax)
         np.random.shuffle(temp)
-        currentMax = asdf.tolist()
+        currentMax = temp.tolist()
 
         perm.append(currentMax.pop(0))
 
@@ -48,7 +48,7 @@ class Permutation(tf.keras.layers.Layer):
         # self.permutation = np.random.permutation(dim)
         # self.permutation = np.arange(dim)
         self.permutation = customPremute(dim)
-        print(self.permutation)
+        # print(self.permutation)
         super().build(input_shape)
 
     def call(self, inputs, **kwargs):
