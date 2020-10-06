@@ -2,15 +2,18 @@ import tensorflow as tf
 import numpy as np
 
 
-def customPermute(dim, maxRange=40):
+def customPermute(dim: int, width: int, maxRange=4):
+    def getNum(currentIndex):
+        return (currentIndex % width) * (width) + currentIndex // width
     # take a number and put it in the top 5 available spots
-    # prem = [-1 for i in range(dim)]
     perm = []
 
     # numbers from 0 to dim-1
     numbers = [i for i in range(dim)]
 
-    currentMax = np.array(numbers[:maxRange])
+    currentMax = np.array([getNum(i) for i in range(maxRange)])
+
+    currentIndex = maxRange
 
     for i in range(dim):
 
@@ -22,15 +25,18 @@ def customPermute(dim, maxRange=40):
         perm.append(currentMax.pop(0))
 
         if(i + maxRange < dim):
-            currentMax.append(numbers[i+maxRange])
+            currentMax.append(getNum(currentIndex))
+
+        currentIndex = currentIndex + 1
+
     return perm
 
 
 class Permutation(tf.keras.layers.Layer):
-    def __init__(self, seed=None, maxRange=40, **kwargs):
+    def __init__(self, seed=None, maxRange=10, **kwargs):
         super().__init__(**kwargs)
         self.permutation = None
-        self.maxRange = 4
+        self.maxRange = maxRange
         self.seed = seed
 
     def get_config(self):
@@ -49,8 +55,9 @@ class Permutation(tf.keras.layers.Layer):
         # self.permutation = np.random.permutation(dim)
         # This is an identity perutation
         # self.permutation = np.arange(dim)
+        print(dim)
 
-        self.permutation = customPermute(dim, maxRange=self.maxRange)
+        self.permutation = customPermute(dim, 28, maxRange=self.maxRange)
         # print(self.permutation)
         super().build(input_shape)
 
