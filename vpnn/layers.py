@@ -1,11 +1,70 @@
 import tensorflow as tf
 import numpy as np
+from tensorflow.python.keras.backend import switch
+
+from .types import Permutation_options
+
+
+def gen_horizontal_permutation(dim, max_range=10):
+    # take a number and put it in the top 5 available spots
+    # prem = [-1 for i in range(dim)]
+    perm = []
+
+    # numbers from 0 to dim-1
+    numbers = [i for i in range(dim)]
+
+    currentMax = np.array(numbers[:max_range])
+
+    for i in range(dim):
+
+        #  shuffle the current top
+        temp = np.array(currentMax)
+        np.random.shuffle(temp)
+        currentMax = temp.tolist()
+
+        perm.append(currentMax.pop(0))
+
+        if(i + max_range < dim):
+            currentMax.append(numbers[i+max_range])
+    return perm
+
+
+def gen_vertical_permutaton(dim, width, max_range=10):
+    def getNum(currentIndex):
+        return (currentIndex % width) * (width) + currentIndex // width
+    # take a number and put it in the top 5 available spots
+    perm = []
+
+    # numbers from 0 to dim-1
+    numbers = [i for i in range(dim)]
+
+    currentMax = np.array([getNum(i) for i in range(max_range)])
+
+    currentIndex = max_range
+
+    for i in range(dim):
+
+        #  shuffle the current top
+        temp = np.array(currentMax)
+        np.random.shuffle(temp)
+        currentMax = temp.tolist()
+
+        perm.append(currentMax.pop(0))
+
+        if(i + maxRange < dim):
+            currentMax.append(getNum(currentIndex))
+
+        currentIndex = currentIndex + 1
+
+    return perm
 
 
 class Permutation(tf.keras.layers.Layer):
-    def __init__(self, perm=None, **kwargs):
+    def __init__(self, perm=None, permutation_arrangement=Permutation_options.random, max_range=10, ** kwargs):
         super().__init__(**kwargs)
+        self.permutation_arrangement = permutation_arrangement
         self.permutation = perm
+        self.max_range = max_range
 
     def get_config(self):
         conf = super().get_config()
@@ -17,8 +76,20 @@ class Permutation(tf.keras.layers.Layer):
 
     def build(self, input_shape):
         dim = input_shape[-1]
-        if not self.permutation:
+        if not self.permutation and self.permutation_arrangement == Permutation_options.random:
             self.permutation = np.random.permutation(dim)
+
+        if self.permutation_arrangement == Permutation_options.horizontal:
+            self.permutation = gen_horizontal_permutation(
+                dim,
+                max_range=self.max_range
+            )
+        if self.permutation_arrangement == Permutation_options.vertical:
+            self.permutation = gen_vertical_permutaton(
+                dim,
+                width=28,
+                max_range=self.max_range
+            )
         super().build(input_shape)
 
     def call(self, inputs, **kwargs):
@@ -43,7 +114,8 @@ class Rotation(tf.keras.layers.Layer):
     def build(self, input_shape):
         self.units = input_shape[-1]
         if self.units % 2 == 1:
-            raise ValueError('Rotation layer only works on an even number of inputs')
+            raise ValueError(
+                'Rotation layer only works on an even number of inputs')
         self.theta = self.add_weight(name='theta',
                                      initializer=self.theta_initializer,
                                      shape=(self.units//2,))
@@ -147,6 +219,7 @@ class KernelWrapper(tf.keras.layers.Layer):
     is not implemented as a matrix but may be desired to sometimes
     be treated as such.
     """
+
     def __init__(self, layer, clip_args=None, **kwargs):
         """
         creates a kernel wrapper

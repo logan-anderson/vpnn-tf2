@@ -1,3 +1,4 @@
+from vpnn.types import Permutation_options
 import tensorflow as tf
 from typing import Callable, Union
 
@@ -20,7 +21,8 @@ def vpnn(input_dim: int = None,
          hidden_activation: Union[str, Callable] = 'relu',
          M_initializer='ones',
          M_init=1.3,
-         trainable_M=False):
+         trainable_M=False,
+         permutation_arrangement=Permutation_options.random):
     """
     builds a VPNN model (just volume preserving kernels)
     :param M_initializer: passed to `Chebyshev` constructors
