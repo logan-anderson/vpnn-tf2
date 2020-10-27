@@ -1,7 +1,7 @@
 import tensorflow as tf
 import argparse
 
-from vpnn import vpnn
+from vpnn import vpnn, types
 
 
 parser = argparse.ArgumentParser()
@@ -65,7 +65,8 @@ if __name__ == '__main__':
                  hidden_activation=args.hidden_activation,
                  output_activation=args.hidden_activation if args.dense else 'softmax',
                  trainable_M=args.trainable_M,
-                 M_init=args.cheby_M)
+                 M_init=args.cheby_M,
+                 permutation_arrangement=types.Permutation_options.mixed)
     if args.optimizer == 'rmsprop':
         optimizer = tf.optimizers.RMSprop(momentum=args.momentum)
     elif args.optimizer == 'sgd':
@@ -77,7 +78,8 @@ if __name__ == '__main__':
     else:
         output = model.output
     model = tf.keras.Model(model.input, output)
-    model.compile(optimizer=args.optimizer, loss='categorical_crossentropy', metrics='accuracy')
+    model.compile(optimizer=args.optimizer,
+                  loss='categorical_crossentropy', metrics='accuracy')
 
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
     x_train = x_train.reshape(-1, 28*28) / 255
@@ -88,7 +90,8 @@ if __name__ == '__main__':
     callbacks = []
 
     if args.tensorboard:
-        callbacks.append(tf.keras.callbacks.TensorBoard(log_dir=f'./logs/{args.name}'))
+        callbacks.append(tf.keras.callbacks.TensorBoard(
+            log_dir=f'./logs/{args.name}'))
     if args.save_checkpoints:
         callbacks.append(TFSaveAndTestCallback(metrics=[tf.keras.losses.categorical_crossentropy,
                                                         tf.keras.metrics.categorical_accuracy],

@@ -3,6 +3,7 @@
 # repo-specific
 demos/*/logs
 demos/*/models
+models/
 .idea
 
 # Byte-compiled / optimized / DLL files

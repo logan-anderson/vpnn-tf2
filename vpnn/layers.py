@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+from random import random
 from tensorflow.python.keras.backend import switch
 
 from .types import Permutation_options
@@ -90,6 +91,11 @@ class Permutation(tf.keras.layers.Layer):
                 width=28,
                 max_range=self.max_range
             )
+        if self.permutation_arrangement == Permutation_options.mixed:
+            if random() > .5:
+                self.permutation = gen_vertical_permutaton()
+            else:
+                self.permutation = gen_horizontal_permutation()
         super().build(input_shape)
 
     def call(self, inputs, **kwargs):
