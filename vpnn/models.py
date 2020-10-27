@@ -22,6 +22,7 @@ def vpnn(input_dim: int = None,
          M_initializer='ones',
          M_init=1.3,
          trainable_M=False,
+         name='vpnn',
          permutation_arrangement=Permutation_options.random):
     """
     builds a VPNN model (just volume preserving kernels)
@@ -43,7 +44,7 @@ def vpnn(input_dim: int = None,
     :param hidden_activation: activation for hidden layers (all but the last if no SVD)
     :return: a tf.keras.Model
     """
-    model = tf.keras.Sequential()
+    model = tf.keras.Sequential(name=name)
     if input_dim:
         model.add(tf.keras.layers.Input((input_dim,)))
 
