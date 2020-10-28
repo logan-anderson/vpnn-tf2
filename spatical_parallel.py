@@ -2,8 +2,9 @@ import tensorflow as tf
 from tensorflow import keras
 from vpnn import vpnn
 from vpnn.types import Permutation_options
+from donwload_util import load_mnist_stash
 
-(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+(x_train, y_train), (x_test, y_test) = load_mnist_stash()
 
 x_train = x_train.reshape(-1, 28*28) / 255
 x_test = x_test.reshape(-1, 28*28) / 255
@@ -25,7 +26,7 @@ concat = keras.layers.concatenate([x1, x2])
 output = keras.layers.Dense(10, activation='softmax', name='output')(concat)
 
 model = keras.Model(input_one, output)
-model.compile('adam',
+model.compile('sgd',
               loss='categorical_crossentropy', metrics='accuracy')
 model.summary()
 
