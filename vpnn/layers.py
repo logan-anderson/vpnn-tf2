@@ -43,34 +43,13 @@ def gen_horizontal_permutation(dim, height, width, max_range=10):
     return perm
 
 
-def gen_vertical_permutaton(dim, width, max_range=10):
-    def getNum(currentIndex):
-        return (currentIndex % width) * (width) + currentIndex // width
-    # take a number and put it in the top 5 available spots
-    perm = []
+def gen_vertical_permutaton(dim, height, width, max_range=10):
+    output = gen_horizontal_permutation(
+        dim, height, width, max_range=max_range)
 
-    # numbers from 0 to dim-1
-    numbers = [i for i in range(dim)]
+    m = np.array(output).reshape(height, width)
 
-    currentMax = np.array([getNum(i) for i in range(max_range)])
-
-    currentIndex = max_range
-
-    for i in range(dim):
-
-        #  shuffle the current top
-        temp = np.array(currentMax)
-        np.random.shuffle(temp)
-        currentMax = temp.tolist()
-
-        perm.append(currentMax.pop(0))
-
-        if(i + max_range < dim):
-            currentMax.append(getNum(currentIndex))
-
-        currentIndex = currentIndex + 1
-
-    return perm
+    return np.transpose(m).flatten()
 
 
 class Permutation(tf.keras.layers.Layer):
@@ -104,12 +83,14 @@ class Permutation(tf.keras.layers.Layer):
             self.permutation = gen_vertical_permutaton(
                 dim,
                 28,
+                28,
                 max_range=self.max_range
             )
         if self.permutation_arrangement == Permutation_options.mixed:
             if random() > .5:
                 self.permutation = gen_vertical_permutaton(dim,
-                                                           width=28,
+                                                           28,
+                                                           28,
                                                            max_range=self.max_range)
             else:
                 self.permutation = gen_horizontal_permutation(dim,

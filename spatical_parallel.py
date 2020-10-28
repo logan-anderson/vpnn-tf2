@@ -31,6 +31,7 @@ model.compile('sgd',
 model.summary()
 
 model.fit(x_train, y_train,
-          batch_size=32,
-          epochs=50
+          batch_size=64,
+          epochs=100,
+          validation_data=(x_test, y_test)
           )
