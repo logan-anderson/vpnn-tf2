@@ -87,7 +87,8 @@ if __name__ == '__main__':
                  output_activation=args.hidden_activation if args.dense else 'softmax',
                  trainable_M=args.trainable_M,
                  M_init=args.cheby_M,
-                 permutation_arrangement=types.Permutation_options.mixed)
+                 permutation_arrangement=types.Permutation_options.mixed,
+                 max_permution_range=5)
     if args.optimizer == 'rmsprop':
         optimizer = tf.optimizers.RMSprop(momentum=args.momentum)
     elif args.optimizer == 'sgd':

@@ -23,7 +23,8 @@ def vpnn(input_dim: int = None,
          M_init=1.3,
          trainable_M=False,
          name='vpnn',
-         permutation_arrangement=Permutation_options.random):
+         permutation_arrangement=Permutation_options.random,
+         max_permution_range=None):
     """
     builds a VPNN model (just volume preserving kernels)
     :param M_initializer: passed to `Chebyshev` constructors
@@ -52,7 +53,8 @@ def vpnn(input_dim: int = None,
         for j in range(n_rotations):
             if use_permutations:
                 model.add(Permutation(
-                    permutation_arrangement=permutation_arrangement))
+                    permutation_arrangement=permutation_arrangement,
+                    max_range=max_permution_range or 10))
             model.add(Rotation(theta_initializer=theta_initializer))
 
         if use_diagonals:
@@ -61,7 +63,8 @@ def vpnn(input_dim: int = None,
         for j in range(n_rotations):
             if use_permutations:
                 model.add(Permutation(
-                    permutation_arrangement=permutation_arrangement))
+                    permutation_arrangement=permutation_arrangement,
+                    max_range=max_permution_range or 10))
             model.add(Rotation(theta_initializer=theta_initializer))
 
         if use_bias:

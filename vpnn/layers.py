@@ -96,12 +96,14 @@ class Permutation(tf.keras.layers.Layer):
         if self.permutation_arrangement == Permutation_options.horizontal:
             self.permutation = gen_horizontal_permutation(
                 dim,
+                28,
+                28,
                 max_range=self.max_range
             )
         if self.permutation_arrangement == Permutation_options.vertical:
             self.permutation = gen_vertical_permutaton(
                 dim,
-                width=28,
+                28,
                 max_range=self.max_range
             )
         if self.permutation_arrangement == Permutation_options.mixed:
@@ -111,6 +113,8 @@ class Permutation(tf.keras.layers.Layer):
                                                            max_range=self.max_range)
             else:
                 self.permutation = gen_horizontal_permutation(dim,
+                                                              28,
+                                                              28,
                                                               max_range=self.max_range)
         super().build(input_shape)
 
