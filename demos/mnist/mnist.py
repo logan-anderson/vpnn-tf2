@@ -1,30 +1,51 @@
-import tensorflow as tf
 import argparse
-
+import tensorflow as tf
 from vpnn import vpnn, types
+import sys
+sys.path.append('../../')
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--layers', type=int, default=1, help='number of vpnn layers')
-parser.add_argument('--rotations', type=int, default=2, help='1/2 the number of total rotations')
-parser.add_argument('--theta_initializer', type=str, default='uniform', help='initializer for angles')
-parser.add_argument('--t_initializer', type=str, default='uniform', help='initializer for t params')
-parser.add_argument('--bias_initializer', type=str, default='uniform', help='initializer for biases')
-parser.add_argument('--dense', action='store_true', help='if present, use a dense output not SVD')
-parser.add_argument('--nobias', action='store_true', help='if present no bias is used')
-parser.add_argument('--noperm', action='store_true', help='if present no permutation is used')
-parser.add_argument('--nodiag', action='store_true', help='if present no diagonal is used')
-parser.add_argument('--diagonal_fn', type=str, default=None, help='a diagonal function (from tf.keras.activations)')
-parser.add_argument('--hidden_activation', type=str, default='relu', help='activation for hidden layers')
-parser.add_argument('--optimizer', type=str, default='rmsprop', help='optimizer for training')
-parser.add_argument('--epochs', type=int, default=5, help='number of epochs to train')
-parser.add_argument('--batch_size', type=int, default=64, help='batch size to use')
-parser.add_argument('--tensorboard', action='store_true', help='to use tensorboard')
-parser.add_argument('--name', type=str, default='mnistvpnn', help='name of model (checkpoint and logs)')
-parser.add_argument('--save_checkpoints', action='store_true', help='if present save the model per epoch')
-parser.add_argument('--trainable_M', action='store_true', help='if present make cheby activations trainable')
-parser.add_argument('--cheby_M', type=float, default=1.3, help='initial cheby M (if not trainable)')
-parser.add_argument('--momentum', type=float, default=0.0, help='optimizer momentum if applicable')
+parser.add_argument('--layers', type=int, default=1,
+                    help='number of vpnn layers')
+parser.add_argument('--rotations', type=int, default=2,
+                    help='1/2 the number of total rotations')
+parser.add_argument('--theta_initializer', type=str,
+                    default='uniform', help='initializer for angles')
+parser.add_argument('--t_initializer', type=str,
+                    default='uniform', help='initializer for t params')
+parser.add_argument('--bias_initializer', type=str,
+                    default='uniform', help='initializer for biases')
+parser.add_argument('--dense', action='store_true',
+                    help='if present, use a dense output not SVD')
+parser.add_argument('--nobias', action='store_true',
+                    help='if present no bias is used')
+parser.add_argument('--noperm', action='store_true',
+                    help='if present no permutation is used')
+parser.add_argument('--nodiag', action='store_true',
+                    help='if present no diagonal is used')
+parser.add_argument('--diagonal_fn', type=str, default=None,
+                    help='a diagonal function (from tf.keras.activations)')
+parser.add_argument('--hidden_activation', type=str,
+                    default='relu', help='activation for hidden layers')
+parser.add_argument('--optimizer', type=str,
+                    default='rmsprop', help='optimizer for training')
+parser.add_argument('--epochs', type=int, default=5,
+                    help='number of epochs to train')
+parser.add_argument('--batch_size', type=int,
+                    default=64, help='batch size to use')
+parser.add_argument('--tensorboard', action='store_true',
+                    help='to use tensorboard')
+parser.add_argument('--name', type=str, default='mnistvpnn',
+                    help='name of model (checkpoint and logs)')
+parser.add_argument('--save_checkpoints', action='store_true',
+                    help='if present save the model per epoch')
+parser.add_argument('--trainable_M', action='store_true',
+                    help='if present make cheby activations trainable')
+parser.add_argument('--cheby_M', type=float, default=1.3,
+                    help='initial cheby M (if not trainable)')
+parser.add_argument('--momentum', type=float, default=0.0,
+                    help='optimizer momentum if applicable')
 
 args = parser.parse_args()
 

@@ -1,4 +1,4 @@
-from vpnn.types import Permutation_options
+from .types import Permutation_options
 import tensorflow as tf
 from typing import Callable, Union
 
@@ -51,7 +51,8 @@ def vpnn(input_dim: int = None,
     for k in range(n_layers):
         for j in range(n_rotations):
             if use_permutations:
-                model.add(Permutation())
+                model.add(Permutation(
+                    permutation_arrangement=permutation_arrangement))
             model.add(Rotation(theta_initializer=theta_initializer))
 
         if use_diagonals:
@@ -59,7 +60,8 @@ def vpnn(input_dim: int = None,
 
         for j in range(n_rotations):
             if use_permutations:
-                model.add(Permutation())
+                model.add(Permutation(
+                    permutation_arrangement=permutation_arrangement))
             model.add(Rotation(theta_initializer=theta_initializer))
 
         if use_bias:

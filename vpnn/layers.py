@@ -65,7 +65,7 @@ def gen_vertical_permutaton(dim, width, max_range=10):
 
         perm.append(currentMax.pop(0))
 
-        if(i + maxRange < dim):
+        if(i + max_range < dim):
             currentMax.append(getNum(currentIndex))
 
         currentIndex = currentIndex + 1
@@ -106,9 +106,12 @@ class Permutation(tf.keras.layers.Layer):
             )
         if self.permutation_arrangement == Permutation_options.mixed:
             if random() > .5:
-                self.permutation = gen_vertical_permutaton()
+                self.permutation = gen_vertical_permutaton(dim,
+                                                           width=28,
+                                                           max_range=self.max_range)
             else:
-                self.permutation = gen_horizontal_permutation()
+                self.permutation = gen_horizontal_permutation(dim,
+                                                              max_range=self.max_range)
         super().build(input_shape)
 
     def call(self, inputs, **kwargs):
@@ -172,10 +175,16 @@ class Diagonal(tf.keras.layers.Layer):
         self.t = self.add_weight(name='t',
                                  initializer=self.t_initializer,
                                  shape=(self.units,))
+        # sample uniformity between 0 and 0.1
+        # there default was 0.01
+        # self.m = self.add_weight(name='m',  initializer=)
         super().build(input_shape)
 
     def call(self, inputs, **kwargs):
+        # f = M*f(t/M) + M
+        # M could be a vector
         f = self.function(self.t)
+        # element wise div on the vector f and roll of F
         vec = f / tf.roll(f, -1, 0)
         return inputs * vec
 
