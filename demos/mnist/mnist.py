@@ -1,8 +1,14 @@
-import argparse
-import tensorflow as tf
 from vpnn import vpnn, types
+import tensorflow as tf
+import argparse
 import sys
-sys.path.append('../../')
+import os
+
+SCRIPT_DIRECTORY = os.path.abspath(os.path.dirname(__file__))
+dir = os.path.join(SCRIPT_DIRECTORY, '../../')
+sys.path.append(dir)
+
+import donwload_util
 
 
 parser = argparse.ArgumentParser()
@@ -103,7 +109,7 @@ if __name__ == '__main__':
     model.compile(optimizer=args.optimizer,
                   loss='categorical_crossentropy', metrics='accuracy')
 
-    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+    (x_train, y_train), (x_test, y_test) = donwload_util.load_mnist_stash()
     x_train = x_train.reshape(-1, 28*28) / 255
     x_test = x_test.reshape(-1, 28*28) / 255
     y_train = tf.keras.utils.to_categorical(y_train)
