@@ -6,7 +6,7 @@ from tensorflow.python.keras.backend import switch
 from .types import Permutation_options
 
 
-def gen_horizontal_permutation(dim, max_range=10):
+def gen_horizontal_permutation_row(dim, max_range=10):
     # take a number and put it in the top 5 available spots
     # prem = [-1 for i in range(dim)]
     perm = []
@@ -27,6 +27,19 @@ def gen_horizontal_permutation(dim, max_range=10):
 
         if(i + max_range < dim):
             currentMax.append(numbers[i+max_range])
+    return perm
+
+
+def gen_horizontal_permutation(dim, height, width, max_range=10):
+    perm = []
+
+    for i in range(height):
+        def add_row(x: int):
+            return i*width + x
+
+        new_row = map(add_row, gen_horizontal_permutation_row(
+            width, max_range=max_range))
+        perm.extend(new_row)
     return perm
 
 
