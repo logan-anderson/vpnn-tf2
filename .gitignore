@@ -1,5 +1,6 @@
 .vscode/
-mnist-stash
+*mnist-stash
+logs
 
 # repo-specific
 demos/*/logs
