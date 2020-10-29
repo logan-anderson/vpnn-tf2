@@ -16,6 +16,8 @@ class Chebyshev(tf.keras.layers.Layer):
     def __init__(self, M_initializer='ones', M_init=1.3, trainable=False, **kwargs):
         super().__init__(**kwargs)
         self.trainable = trainable
+        # temp fix for error
+        self.__name__ = 'cheb'
         self.M_initializer, self.M = M_initializer, M_init
 
     def compute_output_shape(self, input_shape):
