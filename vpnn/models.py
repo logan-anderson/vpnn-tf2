@@ -1,3 +1,4 @@
+from tensorflow import keras
 from .types import Permutation_options
 import tensorflow as tf
 from typing import Callable, Union
@@ -24,7 +25,9 @@ def vpnn(input_dim: int = None,
          trainable_M=False,
          name='vpnn',
          permutation_arrangement=Permutation_options.random,
-         max_permution_range=None):
+         max_permution_range=None,
+         use_dropout=False,
+         dropout_rate=.2):
     """
     builds a VPNN model (just volume preserving kernels)
     :param M_initializer: passed to `Chebyshev` constructors
@@ -50,6 +53,8 @@ def vpnn(input_dim: int = None,
         model.add(tf.keras.layers.Input((input_dim,)))
 
     for k in range(n_layers):
+        if use_dropout:
+            model.add(keras.layers.Dropout(dropout_rate))
         for j in range(n_rotations):
             if use_permutations:
                 model.add(Permutation(

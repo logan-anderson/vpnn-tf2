@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
-from vpnn import vpnn
+from .vpnn import vpnn
 from vpnn.types import Permutation_options
 from donwload_util import load_mnist_stash
 
@@ -15,12 +15,17 @@ y_test = tf.keras.utils.to_categorical(y_test)
 input_one = keras.Input(28*28, name='input_one_in')
 # input_two = keras.Input(28*28, name='input_two_in')
 
-x1 = vpnn(input_dim=28*28, n_layers=2, n_rotations=10,
+
+x1 = vpnn(input_dim=28*28, n_layers=4, n_rotations=10,
           permutation_arrangement=Permutation_options.horizontal,
           hidden_activation="chebyshev",
           M_init=2.0,
           name='input_one')(input_one)
-x2 = vpnn(input_dim=28*28, n_layers=2, n_rotations=10,
+
+x1 = keras.layers.BatchNormalization()(x1)
+x2 = keras.layers.BatchNormalization()(x2)
+
+x2 = vpnn(input_dim=28*28, n_layers=4, n_rotations=10,
           permutation_arrangement=Permutation_options.vertical,
           hidden_activation="chebyshev",
           M_init=2.0,

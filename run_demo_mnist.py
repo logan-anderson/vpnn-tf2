@@ -55,6 +55,8 @@ parser.add_argument('--permutation_arrangement', type=int, default=1,
                     help='random = 1  horizontal = 2 vertical = 3 mixed = 4')
 parser.add_argument('--permutation_max_range', type=int, default=10,
                     help='')
+parser.add_argument('--use_dropout', type=bool, default=False,
+                    help='')
 args = parser.parse_args()
 
 
@@ -98,7 +100,10 @@ if __name__ == '__main__':
                  trainable_M=args.trainable_M,
                  M_init=args.cheby_M,
                  permutation_arrangement=perm_type,
-                 max_permution_range=args.permutation_max_range)
+                 max_permution_range=args.permutation_max_range,
+                 use_dropout=args.use_dropout,
+                 )
+    print(args.use_dropout)
     if args.optimizer == 'rmsprop':
         optimizer = tf.optimizers.RMSprop(momentum=args.momentum)
     elif args.optimizer == 'sgd':
