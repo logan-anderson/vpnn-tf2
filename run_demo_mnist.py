@@ -136,6 +136,7 @@ if __name__ == '__main__':
     model.fit(x_train, y_train,
               batch_size=args.batch_size,
               epochs=args.epochs,
-              callbacks=callbacks)
+              callbacks=callbacks,
+              validation_data=(x_test, y_test))
     tf.saved_model.save(model, f'models/mnist/{args.name}-final')
     print('All done :)')
