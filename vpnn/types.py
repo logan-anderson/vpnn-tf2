@@ -6,3 +6,4 @@ class Permutation_options(Enum):
     horizontal = 2
     vertical = 3
     mixed = 4
+    grid = 5

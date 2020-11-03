@@ -6,6 +6,34 @@ from tensorflow.python.keras.backend import switch
 from .types import Permutation_options
 
 
+def update_slice(arr, startx, endx, starty, endy, new_arr):
+    for i in range(startx, endx):
+        for j in range(starty, endy):
+            arr[i, j] = new_arr[i-startx, j-starty]
+
+
+def gen_grid_permutation(width, height, max_range=10, offset=None):
+    used_offset = offset or max_range
+
+    # numbers from 0 to dim-1
+    perm = np.arange(width*height).reshape(width, height)
+
+    for i in range(0, height, used_offset):
+        for j in range(0, width, used_offset):
+            # get the current slice
+            part = perm[i:i+max_range, j:j+max_range].flatten()
+            # shuffle it
+            np.random.shuffle(part)
+            part = part.reshape(max_range, max_range)
+            # print("part")
+            # print(part)
+            # update it in the permuation
+            update_slice(perm, i, i+max_range, j, j+max_range, part)
+            # print(perm)
+
+    return perm.flatten()
+
+
 def gen_horizontal_permutation_row(dim, max_range=10):
     # take a number and put it in the top 5 available spots
     # prem = [-1 for i in range(dim)]
@@ -97,6 +125,9 @@ class Permutation(tf.keras.layers.Layer):
                                                               28,
                                                               28,
                                                               max_range=self.max_range)
+        if self.permutation_arrangement == Permutation_options.grid:
+            self.permutation = gen_grid_permutation(
+                28, 28, max_range=self.max_range)
         super().build(input_shape)
 
     def call(self, inputs, **kwargs):
