@@ -7,3 +7,4 @@ class Permutation_options(Enum):
     vertical = 3
     mixed = 4
     grid = 5
+    mixed3 = 6
