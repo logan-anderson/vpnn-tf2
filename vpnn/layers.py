@@ -34,13 +34,13 @@ def gen_grid_permutation(width, height, max_range=10, offset=None):
     return perm.flatten()
 
 
-def gen_horizontal_permutation_row(dim, max_range=10):
+def gen_horizontal_permutation_row(dim, max_range=10, n=None):
     # take a number and put it in the top 5 available spots
     # prem = [-1 for i in range(dim)]
     perm = []
 
     # numbers from 0 to dim-1
-    numbers = [i for i in range(dim)]
+    numbers = [i for i in range(dim)] if n is None else n
 
     currentMax = np.array(numbers[:max_range])
 
@@ -72,12 +72,19 @@ def gen_horizontal_permutation(dim, height, width, max_range=10):
 
 
 def gen_vertical_permutaton(dim, height, width, max_range=10):
-    output = gen_horizontal_permutation(
-        dim, height, width, max_range=max_range)
+    nums = [[] for i in range(height)]
 
-    m = np.array(output).reshape(height, width)
-
-    return np.transpose(m).flatten()
+    # make a matrix of the numbers 1,2,3,4,..dim
+    count = 0
+    for i in range(height):
+        nums[i] = [j for j in range(count, count+width)]
+        count = count + width
+    nums_np = np.array(nums)
+    perm = []
+    for i in range(width):
+        perm.append(gen_horizontal_permutation_row(
+            height, max_range=max_range, n=nums_np[:, i:i+1].flatten()))
+    return np.array(perm).T.flatten()
 
 
 class Permutation(tf.keras.layers.Layer):
