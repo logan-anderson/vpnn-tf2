@@ -18,19 +18,21 @@ parser.add_argument('--layers', type=int, default=1,
 parser.add_argument('--rotations', type=int, default=2,
                     help='number of vpnn layers in each part')
 
-parser.add_argument('--output_dim', type=int, default=None,
-                    help='number of vpnn layers in each part')
-parser.add_argument('-fake', action='store_true')
-
+parser.add_argument('--permutation_arrangement', type=int, default=1,
+                    help='random = 1  horizontal = 2 vertical = 3 mixed = 4')
+parser.add_argument('--use_dropout', type=bool, default=False, help='')
+parser.add_argument('--total_runs', type=int, default=28,
+                    help='it will run tests from 1 to total_runs')
+parser.add_argument('--epochs', type=int, default=100,
+                    help='total epochs on each test')
 
 args = parser.parse_args()
 print(args)
 n_layers = args.layers
 n_rotations = args.rotations
-output_dim = args.output_dim
-total = 3
-dropout = True
-
+total = args.total_runs
+dropout = args.use_dropout
+total_epochs = args.epochs
 # data prep
 (x_train, y_train), (x_test, y_test) = load_mnist_stash()
 
@@ -66,7 +68,7 @@ def build_model(max_):
 validations = []
 for i in range(total):
     model = build_model(total)
-    hist = model.fit(x_train, y_train, epochs=2,
+    hist = model.fit(x_train, y_train, epochs=total_epochs,
                      validation_data=(x_test, y_test))
     current_max = max(hist.history['val_accuracy'])
     print('hist', hist.history)
