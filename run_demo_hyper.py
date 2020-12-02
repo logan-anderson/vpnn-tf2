@@ -51,10 +51,6 @@ def build_model(max_):
                  name=f'vpnn-1',
                  output_activation='softmax',
                  permutation_arrangement=types.Permutation_options.mixed,
-                 #  max_permution_range=hp.Int('units',
-                 #                             min_value=1,
-                 #                             max_value=5,
-                 #                             step=1)
                  max_permution_range=max_
                  )
 
@@ -66,10 +62,12 @@ def build_model(max_):
 
 
 validations = []
+stopping_callback = tf.keras.callbacks.EarlyStopping(
+    monitor='val_accuracy', patience=5, min_delta=0.001)
 for i in range(total):
     model = build_model(total)
     hist = model.fit(x_train, y_train, epochs=total_epochs,
-                     validation_data=(x_test, y_test))
+                     validation_data=(x_test, y_test), callbacks=[stopping_callback])
     current_max = max(hist.history['val_accuracy'])
     print('hist', hist.history)
     print('max', current_max)
