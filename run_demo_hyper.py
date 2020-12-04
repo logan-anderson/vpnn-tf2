@@ -8,7 +8,12 @@ from datetime import datetime
 
 from donwload_util import load_mnist_stash
 
-
+PrintCallback = tf.keras.callbacks.LambdaCallback(
+    on_epoch_begin=None,  on_epoch_end=lambda epoch, logs: print(f"epoch: {epoch}, loss: {logs['loss']}, val_loss: {logs['val_loss']} val_accuracy: {logs['val_accuracy']}" + '\n'), on_batch_begin=None, on_batch_end=None,
+    on_train_begin=None, on_train_end=None,
+)
+stopping_callback = tf.keras.callbacks.EarlyStopping(
+    monitor='val_accuracy', patience=10, restore_best_weights=True)
 # args
 parser = argparse.ArgumentParser()
 
@@ -45,14 +50,14 @@ y_test = tf.keras.utils.to_categorical(y_test)
     x_train[:-5000], y_train[:-5000]), (x_train[-5000:], y_train[-5000:])
 
 
-def build_model(max_):
+def build_model(max_, perm=types.Permutation_options.mixed):
     model = vpnn(input_dim=28*28, n_layers=n_layers, n_rotations=n_rotations,
                  hidden_activation="chebyshev",
                  M_init=2.0,
                  output_dim=10,
-                 name=f'vpnn-1',
+                 name=f'vpnn-{i}',
                  output_activation='softmax',
-                 permutation_arrangement=types.Permutation_options.mixed,
+                 permutation_arrangement=perm,
                  max_permution_range=max_
                  )
 
@@ -64,25 +69,40 @@ def build_model(max_):
 
 
 validations = []
-stopping_callback = tf.keras.callbacks.EarlyStopping(
-    monitor='val_accuracy', patience=10, restore_best_weights=True)
+
 
 for i in range(total):
     model = build_model(i)
-    hist = model.fit(x_train, y_train, epochs=total_epochs,
-                     validation_data=(x_val, y_val), callbacks=[stopping_callback])
+    hist = model.fit(x_train, y_train,
+                     epochs=total_epochs,
+                     validation_data=(x_val, y_val),
+                     callbacks=[stopping_callback, PrintCallback],
+                     verbose=0,
+                     )
     current_max = max(hist.history['val_accuracy'])
     print('hist', hist.history)
     print('max', current_max)
-    value = model.evaluate(x_test, y_test)
+    value = model.evaluate(x_test, y_test, verbose=0)
     print(value)
     validations.append(value[-1])
+
+
+# build random perm model
+model = build_model(1, perm=types.Permutation_options.random)
+hist = model.fit(x_train, y_train,
+                 epochs=total_epochs,
+                 validation_data=(x_val, y_val),
+                 callbacks=[stopping_callback, PrintCallback],
+                 verbose=0,
+                 )
+random_acc = model.evaluate(x_test, y_test, verbose=0)[-1]
+
 
 fig, ax = plt.subplots()
 ax.plot([i + 1 for i in range(total)],
         validations, label='Mixed Permutations')
-ax.plot([i + 1 for i in range(total)], [.92]
-        * total, label='random permutations')
+ax.plot([i + 1 for i in range(total)], [random_acc]*total,
+        label='random permutations')
 ax.set(xlabel="max range", ylabel="Test Accuracy",
        title=f"layers={n_layers} rotations={n_rotations}, mixed permutations",
        label='mixed permutations'
