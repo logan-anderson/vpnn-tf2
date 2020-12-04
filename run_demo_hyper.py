@@ -23,7 +23,7 @@ parser.add_argument('--permutation_arrangement', type=int, default=1,
 parser.add_argument('--use_dropout', type=bool, default=False, help='')
 parser.add_argument('--total_runs', type=int, default=28,
                     help='it will run tests from 1 to total_runs')
-parser.add_argument('--epochs', type=int, default=100,
+parser.add_argument('--epochs', type=int, default=2,
                     help='total epochs on each test')
 
 args = parser.parse_args()
@@ -38,9 +38,11 @@ total_epochs = args.epochs
 
 x_train = x_train.reshape(-1, 28*28) / 255
 x_test = x_test.reshape(-1, 28*28) / 255
-
 y_train = tf.keras.utils.to_categorical(y_train)
 y_test = tf.keras.utils.to_categorical(y_test)
+
+(x_train, y_train), (x_val, y_val) = (
+    x_train[:-5000], y_train[:-5000]), (x_train[-5000:], y_train[-5000:])
 
 
 def build_model(max_):
@@ -63,20 +65,29 @@ def build_model(max_):
 
 validations = []
 stopping_callback = tf.keras.callbacks.EarlyStopping(
-    monitor='val_accuracy', patience=5, min_delta=0.001)
+    monitor='val_accuracy', patience=10, restore_best_weights=True)
+
 for i in range(total):
-    model = build_model(total)
+    model = build_model(i)
     hist = model.fit(x_train, y_train, epochs=total_epochs,
-                     validation_data=(x_test, y_test), callbacks=[stopping_callback])
+                     validation_data=(x_val, y_val), callbacks=[stopping_callback])
     current_max = max(hist.history['val_accuracy'])
     print('hist', hist.history)
     print('max', current_max)
-    validations.append(current_max)
+    value = model.evaluate(x_test, y_test)
+    print(value)
+    validations.append(value[-1])
 
 fig, ax = plt.subplots()
-ax.plot([i + 1 for i in range(total)], validations)
-ax.set(xlabel="max range", ylabel="validation accuracy",
-       title=f"layers={n_layers} rotations={n_rotations}, mixed permutations")
+ax.plot([i + 1 for i in range(total)],
+        validations, label='Mixed Permutations')
+ax.plot([i + 1 for i in range(total)], [.92]
+        * total, label='random permutations')
+ax.set(xlabel="max range", ylabel="Test Accuracy",
+       title=f"layers={n_layers} rotations={n_rotations}, mixed permutations",
+       label='mixed permutations'
+       )
+ax.legend()
 
 now = datetime.now()
 fig.savefig(
