@@ -13,7 +13,7 @@ PrintCallback = tf.keras.callbacks.LambdaCallback(
     on_train_begin=None, on_train_end=None,
 )
 stopping_callback = tf.keras.callbacks.EarlyStopping(
-    monitor='val_accuracy', patience=10, restore_best_weights=True)
+    monitor='val_accuracy', patience=20, restore_best_weights=True)
 # args
 parser = argparse.ArgumentParser()
 
@@ -107,7 +107,9 @@ ax.set(xlabel="max range", ylabel="Test Accuracy",
        title=f"layers={n_layers} rotations={n_rotations}, mixed permutations",
        label='mixed permutations'
        )
+
 ax.legend()
+plt.xticks([i for i in range(total)])
 
 now = datetime.now()
 fig.savefig(

@@ -68,7 +68,7 @@ def gen_horizontal_permutation(dim, height, width, max_range=10):
         new_row = map(add_row, gen_horizontal_permutation_row(
             width, max_range=max_range))
         perm.extend(new_row)
-    return perm
+    return np.array(perm)
 
 
 def gen_vertical_permutaton(dim, height, width, max_range=10):
@@ -114,14 +114,14 @@ class Permutation(tf.keras.layers.Layer):
                 28,
                 max_range=self.max_range
             )
-        if self.permutation_arrangement == Permutation_options.vertical:
+        elif self.permutation_arrangement == Permutation_options.vertical:
             self.permutation = gen_vertical_permutaton(
                 dim,
                 28,
                 28,
                 max_range=self.max_range
             )
-        if self.permutation_arrangement == Permutation_options.mixed:
+        elif self.permutation_arrangement == Permutation_options.mixed:
             if random() > .5:
                 self.permutation = gen_vertical_permutaton(dim,
                                                            28,
@@ -132,10 +132,10 @@ class Permutation(tf.keras.layers.Layer):
                                                               28,
                                                               28,
                                                               max_range=self.max_range)
-        if self.permutation_arrangement == Permutation_options.grid:
+        elif self.permutation_arrangement == Permutation_options.grid:
             self.permutation = gen_grid_permutation(
                 28, 28, max_range=self.max_range)
-        if self.permutation_arrangement == Permutation_options.mixed3:
+        elif self.permutation_arrangement == Permutation_options.mixed3:
             num = random()
             if num < .333:
                 self.permutation = gen_vertical_permutaton(dim,
