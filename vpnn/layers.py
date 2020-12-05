@@ -1,7 +1,6 @@
 import tensorflow as tf
 import numpy as np
-from random import random
-from tensorflow.python.keras.backend import switch
+from random import choice
 
 from .types import Permutation_options
 
@@ -122,7 +121,8 @@ class Permutation(tf.keras.layers.Layer):
                 max_range=self.max_range
             )
         elif self.permutation_arrangement == Permutation_options.mixed:
-            if random() > .5:
+            num = choice([1, 2])
+            if num == 1:
                 self.permutation = gen_vertical_permutaton(dim,
                                                            28,
                                                            28,
@@ -136,13 +136,13 @@ class Permutation(tf.keras.layers.Layer):
             self.permutation = gen_grid_permutation(
                 28, 28, max_range=self.max_range)
         elif self.permutation_arrangement == Permutation_options.mixed3:
-            num = random()
-            if num < .333:
+            num = choice([1, 2, 3])
+            if num == 1:
                 self.permutation = gen_vertical_permutaton(dim,
                                                            28,
                                                            28,
                                                            max_range=self.max_range)
-            elif num < .666:
+            elif num == 2:
                 self.permutation = gen_horizontal_permutation(dim,
                                                               28,
                                                               28,

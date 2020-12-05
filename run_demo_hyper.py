@@ -3,7 +3,7 @@ from vpnn import vpnn, types
 import argparse
 from matplotlib import pyplot as plt
 from datetime import datetime
-
+import json
 
 from donwload_util import load_mnist_stash
 
@@ -110,9 +110,14 @@ ax.set(xlabel="max range", ylabel="Test Accuracy",
        )
 
 ax.legend()
-plt.xticks([i for i in range(total)])
+plt.xticks([i+1 for i in range(total)])
 
 now = datetime.now()
-fig.savefig(
-    f'./img/plot_layers={n_layers}_rotations={n_rotations}_mixed permutations-{now.strftime("%Y-%m-%d %H:%M:%S")}.png')
+file_name = f'./img/plot_layers = {n_layers}_rotations = {n_rotations}_mixed permutations-{now.strftime("%Y-%m-%d %H:%M:%S")}'
+fig.savefig(f"{file_name}.png")
+with open(f'{file_name}.json', 'w') as outfile:
+    json.dump({
+        'random_perm': random_acc,
+        'mixed_perm': validations,
+    }, outfile)
 print('all done!')
