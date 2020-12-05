@@ -1,5 +1,4 @@
 import tensorflow as tf
-from tensorflow.python.ops.gen_math_ops import mod
 from vpnn import vpnn, types
 import argparse
 from matplotlib import pyplot as plt
@@ -23,16 +22,17 @@ parser.add_argument('--layers', type=int, default=1,
 parser.add_argument('--rotations', type=int, default=2,
                     help='number of vpnn layers in each part')
 
-parser.add_argument('--permutation_arrangement', type=int, default=1,
-                    help='random = 1  horizontal = 2 vertical = 3 mixed = 4')
 parser.add_argument('--use_dropout', type=bool, default=False, help='')
 parser.add_argument('--total_runs', type=int, default=28,
                     help='it will run tests from 1 to total_runs')
 parser.add_argument('--epochs', type=int, default=2,
                     help='total epochs on each test')
+parser.add_argument('--permutation_arrangement', type=int, default=4,
+                    help='random = 1  horizontal = 2 vertical = 3 mixed = 4')
 
 args = parser.parse_args()
 print(args)
+perm_type = types.Permutation_options(args.permutation_arrangement)
 n_layers = args.layers
 n_rotations = args.rotations
 total = args.total_runs
@@ -50,7 +50,7 @@ y_test = tf.keras.utils.to_categorical(y_test)
     x_train[:-5000], y_train[:-5000]), (x_train[-5000:], y_train[-5000:])
 
 
-def build_model(max_, perm=types.Permutation_options.mixed):
+def build_model(max_, perm=perm_type):
     model = vpnn(input_dim=28*28, n_layers=n_layers, n_rotations=n_rotations,
                  hidden_activation="chebyshev",
                  M_init=2.0,
@@ -72,7 +72,8 @@ validations = []
 
 
 for i in range(total):
-    model = build_model(i)
+    # Needs to be i + 1 as we are starting at 0
+    model = build_model(i+1)
     hist = model.fit(x_train, y_train,
                      epochs=total_epochs,
                      validation_data=(x_val, y_val),
