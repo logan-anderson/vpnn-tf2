@@ -27,8 +27,8 @@ parser.add_argument('--total_runs', type=int, default=28,
                     help='it will run tests from 1 to total_runs')
 parser.add_argument('--epochs', type=int, default=2,
                     help='total epochs on each test')
-parser.add_argument('--permutation_arrangement', type=int, default=4,
-                    help='random = 1  horizontal = 2 vertical = 3 mixed = 4')
+parser.add_argument('--permutation_arrangement', type=int, choices=[1, 2, 3, 4, 5, 6], default=4,
+                    help='random = 1  horizontal = 2 vertical = 3 mixed = 4 grid = 5 mixed3 = 6')
 
 args = parser.parse_args()
 print(args)

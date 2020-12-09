@@ -13,5 +13,5 @@ python run_demo_mnist.py --layers 4 --hidden_activation chebyshev\
          --permutation_arrangement 3  --permutation_max_range 5 --use_dropout True
 ```
 ```bash
-python run_demo_hyper.py --layers 2 --rotations 2 --use_dropout True --total_runs 28 --epochs 300
+python run_demo_hyper.py --layers 2 --rotations 2 --use_dropout True --total_runs 28 --epochs 300 --permutation_arrangement 4
 ```
