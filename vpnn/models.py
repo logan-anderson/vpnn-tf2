@@ -59,7 +59,7 @@ def vpnn(input_dim: int = None,
             if use_permutations:
                 model.add(Permutation(
                     permutation_arrangement=permutation_arrangement,
-                    max_range=max_permution_range or 10))
+                    max_range=max_permution_range))
             model.add(Rotation(theta_initializer=theta_initializer))
 
         if use_diagonals:
@@ -69,7 +69,7 @@ def vpnn(input_dim: int = None,
             if use_permutations:
                 model.add(Permutation(
                     permutation_arrangement=permutation_arrangement,
-                    max_range=max_permution_range or 10))
+                    max_range=max_permution_range))
             model.add(Rotation(theta_initializer=theta_initializer))
 
         if use_bias:

@@ -2,6 +2,8 @@ import tensorflow as tf
 import numpy as np
 from random import choice
 
+from tensorflow.python.ops.gen_math_ops import maximum
+
 from .types import Permutation_options
 
 
@@ -103,7 +105,9 @@ class Permutation(tf.keras.layers.Layer):
 
     def build(self, input_shape):
         dim = input_shape[-1]
-        if not self.permutation and self.permutation_arrangement == Permutation_options.random:
+        if self.permutation:
+            pass
+        elif not self.permutation and self.permutation_arrangement == Permutation_options.random:
             self.permutation = np.random.permutation(dim)
 
         if self.permutation_arrangement == Permutation_options.horizontal:
