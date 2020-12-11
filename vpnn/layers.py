@@ -2,8 +2,7 @@ import tensorflow as tf
 import numpy as np
 from random import choice
 
-from tensorflow.python.ops.gen_math_ops import maximum
-
+from math import sqrt
 from .types import Permutation_options
 
 
@@ -105,6 +104,7 @@ class Permutation(tf.keras.layers.Layer):
 
     def build(self, input_shape):
         dim = input_shape[-1]
+        width = int(sqrt(dim))
         if self.permutation:
             pass
         elif not self.permutation and self.permutation_arrangement == Permutation_options.random:
@@ -113,47 +113,47 @@ class Permutation(tf.keras.layers.Layer):
         if self.permutation_arrangement == Permutation_options.horizontal:
             self.permutation = gen_horizontal_permutation(
                 dim,
-                28,
-                28,
+                width,
+                width,
                 max_range=self.max_range
             )
         elif self.permutation_arrangement == Permutation_options.vertical:
             self.permutation = gen_vertical_permutaton(
                 dim,
-                28,
-                28,
+                width,
+                width,
                 max_range=self.max_range
             )
         elif self.permutation_arrangement == Permutation_options.mixed:
             num = choice([1, 2])
             if num == 1:
                 self.permutation = gen_vertical_permutaton(dim,
-                                                           28,
-                                                           28,
+                                                           width,
+                                                           width,
                                                            max_range=self.max_range)
             else:
                 self.permutation = gen_horizontal_permutation(dim,
-                                                              28,
-                                                              28,
+                                                              width,
+                                                              width,
                                                               max_range=self.max_range)
         elif self.permutation_arrangement == Permutation_options.grid:
             self.permutation = gen_grid_permutation(
-                28, 28, max_range=self.max_range)
+                width, width, max_range=self.max_range)
         elif self.permutation_arrangement == Permutation_options.mixed3:
             num = choice([1, 2, 3])
             if num == 1:
                 self.permutation = gen_vertical_permutaton(dim,
-                                                           28,
-                                                           28,
+                                                           width,
+                                                           width,
                                                            max_range=self.max_range)
             elif num == 2:
                 self.permutation = gen_horizontal_permutation(dim,
-                                                              28,
-                                                              28,
+                                                              width,
+                                                              width,
                                                               max_range=self.max_range)
             else:
                 self.permutation = gen_grid_permutation(
-                    28, 28, max_range=self.max_range)
+                    width, width, max_range=self.max_range)
         super().build(input_shape)
 
     def call(self, inputs, **kwargs):
