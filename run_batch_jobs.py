@@ -34,15 +34,15 @@ for job in jobs:
 
     layers = job['layers']
     rotations = job['rotations']
-    mode = 'a' if os.path.exists(job_file) else 'w'
-    with open(job_file, mode) as fh:
-        fh.writelines(f"""
-#!/bin/bash
-#SBATCH --cpus-per-task=6   # maximum CPU cores per GPU request: 6 on Cedar, 16 on Graham.
-#SBATCH --mem=32000M        # memory per node
-#SBATCH --time=0-20:00      # time (DD-HH:MM)
-#SBATCH --output=hyper-fixed-mnist-layers-{layers}-rotations-{rotations}_dropout-.2%N-%j.out  # %N for node name, %j for jobID
-#SBATCH --gres=gpu:v100:1
+    if os.path.exists(job_file):
+        os.remove(job_file)
+    with open(job_file, 'a') as fh:
+        fh.writelines("#!/bin/bash\n")
+        fh.writelines(f"""# SBATCH --cpus-per-task=6   # maximum CPU cores per GPU request: 6 on Cedar, 16 on Graham.
+# SBATCH --mem=32000M        # memory per node
+# SBATCH --time=0-20:00      # time (DD-HH:MM)
+# SBATCH --output=hyper-fixed-mnist-layers-{layers}-rotations-{rotations}_dropout-.2%N-%j.out  # %N for node name, %j for jobID
+# SBATCH --gres=gpu:v100:1
 
 module load cuda cudnn
 source ../tensorflow/bin/activate
