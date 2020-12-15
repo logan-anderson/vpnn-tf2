@@ -43,7 +43,7 @@ for job in jobs:
 module load cuda cudnn
 source ../tensorflow/bin/activate
 
-python run_demo_hyper.py --layers 10 --rotations 1 --use_dropout True --total_runs 28 --epochs 300 --permutation_arrangement 4
+python run_demo_hyper.py --layers {layers} --rotations {rotations} --use_dropout True --total_runs 28 --epochs 300 --permutation_arrangement 4
         """)
 
     os.system("sbatch %s" % job_file)
