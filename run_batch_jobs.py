@@ -14,7 +14,7 @@ job_directory = "%s/.jobs" % os.getcwd()
 # data_dir = os.path.join(scratch, '/spatical')
 
 # Make top level directories
-# mkdir_p(job_directory)
+mkdir_p(job_directory)
 # mkdir_p(data_dir)
 
 max_ = 3
