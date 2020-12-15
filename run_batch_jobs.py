@@ -37,6 +37,7 @@ for job in jobs:
     mode = 'a' if os.path.exists(job_file) else 'w'
     with open(job_file, mode) as fh:
         fh.writelines(f"""
+#!/bin/bash
 #SBATCH --cpus-per-task=6   # maximum CPU cores per GPU request: 6 on Cedar, 16 on Graham.
 #SBATCH --mem=32000M        # memory per node
 #SBATCH --time=0-20:00      # time (DD-HH:MM)
