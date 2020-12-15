@@ -99,6 +99,8 @@ ax.legend()
 plt.xticks([i+1 for i in range(total)])
 
 now = datetime.now()
+
+# save data
 file_name = f'./img/plot_layers = {n_layers}_rotations = {n_rotations}_mixed permutations-{now.strftime("%Y-%m-%d %H:%M:%S")}'
 fig.savefig(f"{file_name}.png")
 with open(f'{file_name}.json', 'w') as outfile:
