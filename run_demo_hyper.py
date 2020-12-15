@@ -1,3 +1,4 @@
+from args import CommandLineArgs
 import tensorflow as tf
 from vpnn import vpnn, types
 import argparse
@@ -14,29 +15,14 @@ PrintCallback = tf.keras.callbacks.LambdaCallback(
 stopping_callback = tf.keras.callbacks.EarlyStopping(
     monitor='val_accuracy', patience=20, restore_best_weights=True)
 # args
-parser = argparse.ArgumentParser()
 
-parser.add_argument('--layers', type=int, default=1,
-                    help='number of vpnn layers in each part')
-
-parser.add_argument('--rotations', type=int, default=2,
-                    help='number of vpnn layers in each part')
-
-parser.add_argument('--use_dropout', type=bool, default=False, help='')
-parser.add_argument('--total_runs', type=int, default=28,
-                    help='it will run tests from 1 to total_runs')
-parser.add_argument('--epochs', type=int, default=2,
-                    help='total epochs on each test')
-parser.add_argument('--permutation_arrangement', type=int, choices=[1, 2, 3, 4, 5, 6], default=4,
-                    help='random = 1  horizontal = 2 vertical = 3 mixed = 4 grid = 5 mixed3 = 6')
-
-args = parser.parse_args()
-print(args)
+args = CommandLineArgs()
+print(args.args)
 perm_type = types.Permutation_options(args.permutation_arrangement)
 n_layers = args.layers
 n_rotations = args.rotations
 total = args.total_runs
-dropout = args.use_dropout
+dropout = args.dropout
 total_epochs = args.epochs
 # data prep
 (x_train, y_train), (x_test, y_test) = load_mnist_stash()
