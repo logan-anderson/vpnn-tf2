@@ -44,7 +44,7 @@ for job in jobs:
 #SBATCH --gres=gpu:v100:1
 
 module load cuda cudnn
-source ../../tensorflow/bin/activate
+source ../tensorflow/bin/activate
 
 python {file} --layers {layers} --rotations {rotations} --use_dropout True --total_runs 28 --epochs 300 --permutation_arrangement 4
         """)
