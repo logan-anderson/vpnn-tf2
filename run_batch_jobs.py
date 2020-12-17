@@ -21,8 +21,8 @@ mkdir_p(job_directory + '/img')
 max_ = 5
 min_ = 1
 jobs = []
-for i in range(1, max_, 2):
-    for j in range(1, max_, 2):
+for i in range(1, max_):
+    for j in range(1, max_):
         jobs.append({"layers": i, "rotations": j,
                      "title": f"tf-vpnn-spatical-mixedlayers-{i}-rotations-{j}"})
 

@@ -9,7 +9,7 @@ import json
 from donwload_util import load_mnist_stash
 
 PrintCallback = tf.keras.callbacks.LambdaCallback(
-    on_epoch_begin=None,  on_epoch_end=lambda epoch, logs: print(f"epoch: {epoch}, loss: {logs['loss']}, val_loss: {logs['val_loss']} val_accuracy: {logs['val_accuracy']}" + '\n'), on_batch_begin=None, on_batch_end=None,
+    on_epoch_begin=None,  on_epoch_end=lambda epoch, logs: print(f"epoch: {epoch}, accuracy:{logs['accuracy']} loss: {logs['loss']}, val_loss: {logs['val_loss']} val_accuracy: {logs['val_accuracy']}" + '\n'), on_batch_begin=None, on_batch_end=None,
     on_train_begin=None, on_train_end=None,
 )
 stopping_callback = tf.keras.callbacks.EarlyStopping(
