@@ -1,4 +1,5 @@
 import os
+import time
 
 
 def mkdir_p(dir):
@@ -18,10 +19,10 @@ mkdir_p(job_directory + '/img')
 
 # mkdir_p(data_dir)
 
-max_ = 5
+max_ = 6
 min_ = 1
 jobs = []
-for i in range(1, max_):
+for i in range(1, 10):
     for j in range(1, max_):
         jobs.append({"layers": i, "rotations": j,
                      "title": f"tf-vpnn-spatical-mixedlayers-{i}-rotations-{j}"})
@@ -48,5 +49,5 @@ source ../tensorflow/bin/activate
 
 python {file} --layers {layers} --rotations {rotations} --use_dropout True --total_runs 28 --epochs 300 --permutation_arrangement 4
         """)
-
+    time.sleep(.5)
     os.system("sbatch %s" % job_file)
