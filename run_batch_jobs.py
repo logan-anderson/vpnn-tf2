@@ -1,5 +1,8 @@
 import os
 import time
+from args import CommandLineArgs
+
+args = CommandLineArgs()
 
 
 def mkdir_p(dir):
@@ -47,7 +50,7 @@ for job in jobs:
 module load cuda cudnn
 source ../tensorflow/bin/activate
 
-python {file} --layers {layers} --rotations {rotations} --use_dropout True --total_runs 28 --epochs 300 --permutation_arrangement 4
+python {file} --layers {layers} --rotations {rotations} --use_dropout True --total_runs 28 --epochs 300 --permutation_arrangement {args.permutation_arrangement}
         """)
     time.sleep(.5)
     os.system("sbatch %s" % job_file)

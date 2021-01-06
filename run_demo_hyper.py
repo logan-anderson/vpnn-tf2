@@ -35,6 +35,15 @@ y_test = tf.keras.utils.to_categorical(y_test)
 (x_train, y_train), (x_val, y_val) = (
     x_train[:-5000], y_train[:-5000]), (x_train[-5000:], y_train[-5000:])
 
+perm_type_text = {
+    1: 'Random',
+    2: 'Horizontal',
+    3: 'Vertical',
+    4: 'Mixed Horizontal and Vertical',
+    5: 'Grid',
+    6: 'Mixed Horizontal, Vertical and Grid',
+}
+
 
 def build_model(max_, perm=perm_type):
     model = vpnn(input_dim=28*28, n_layers=n_layers, n_rotations=n_rotations,
@@ -84,15 +93,16 @@ hist = model.fit(x_train, y_train,
                  )
 random_acc = model.evaluate(x_test, y_test, verbose=0)[-1]
 
+perm_text = perm_type_text[args.permutation_arrangement]
 
 fig, ax = plt.subplots()
 ax.plot([i + 1 for i in range(total)],
-        validations, label='Mixed Permutations')
+        validations, label='{perm_text}  Permutations')
 ax.plot([i + 1 for i in range(total)], [random_acc]*total,
-        label='random permutations')
+        label='Random Permutations')
 ax.set(xlabel="max range", ylabel="Test Accuracy",
-       title=f"layers={n_layers} rotations={n_rotations}, mixed permutations",
-       label='mixed permutations'
+       title=f"Layers={n_layers} Rotations={n_rotations}, {perm_text} Permutations",
+       label=f'{perm_text}  Permutations'
        )
 
 ax.legend()
@@ -100,12 +110,13 @@ plt.xticks([i+1 for i in range(total)])
 
 now = datetime.now()
 
+
 # save data
-file_name = f'./img/plot_layers = {n_layers}_rotations = {n_rotations}_mixed permutations-{now.strftime("%Y-%m-%d %H:%M:%S")}'
+file_name = f'./img/plot_layers = {n_layers}_rotations = {n_rotations}_{perm_text.replace(" ","_")}_permutations-{now.strftime("%Y-%m-%d %H:%M:%S")}'
 fig.savefig(f"{file_name}.png")
 with open(f'{file_name}.json', 'w') as outfile:
     json.dump({
         'random_perm': random_acc,
-        'mixed_perm': validations,
+        'perm': validations,
     }, outfile)
 print('all done!')
