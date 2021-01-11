@@ -44,7 +44,7 @@ for job in jobs:
         fh.writelines(f"""#SBATCH --cpus-per-task=6   # maximum CPU cores per GPU request: 6 on Cedar, 16 on Graham.
 #SBATCH --mem=32000M        # memory per node
 #SBATCH --time=0-20:00      # time (DD-HH:MM)
-#SBATCH --output=hyper-batch-fixed-mnist-layers-{layers}-rotations-{rotations}_dropout-.2%N-%j.out  # %N for node name, %j for jobID
+#SBATCH --output=hyper-batch-fixed-mnist-perm-{args.permutation_arrangement}-layers-{layers}-rotations-{rotations}_dropout-.2%N-%j.out  # %N for node name, %j for jobID
 #SBATCH --gres=gpu:v100:1
 
 module load cuda cudnn

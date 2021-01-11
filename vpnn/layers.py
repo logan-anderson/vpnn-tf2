@@ -20,6 +20,8 @@ def gen_grid_permutation(width, height, max_range=10, offset=None):
 
     for i in range(0, height, used_offset):
         for j in range(0, width, used_offset):
+            if(i+max_range > height or j+max_range > width):
+                continue
             # get the current slice
             part = perm[i:i+max_range, j:j+max_range].flatten()
             # shuffle it
