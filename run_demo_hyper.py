@@ -97,7 +97,7 @@ perm_text = perm_type_text[args.permutation_arrangement]
 
 fig, ax = plt.subplots()
 ax.plot([i + 1 for i in range(total)],
-        validations, label='{perm_text}  Permutations')
+        validations, label=f'{perm_text}  Permutations')
 ax.plot([i + 1 for i in range(total)], [random_acc]*total,
         label='Random Permutations')
 ax.set(xlabel="max range", ylabel="Test Accuracy",
