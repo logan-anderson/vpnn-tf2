@@ -123,6 +123,8 @@ if __name__ == '__main__':
     x_test = x_test.reshape(-1, 28*28) / 255
     y_train = tf.keras.utils.to_categorical(y_train)
     y_test = tf.keras.utils.to_categorical(y_test)
+    (x_train, x_val) = x_train[:-5000], x_train[-5000:]
+    (y_train, y_val) = y_train[:-5000], y_train[-5000:]
 
     callbacks = []
 
@@ -142,6 +144,9 @@ if __name__ == '__main__':
               batch_size=args.batch_size,
               epochs=args.epochs,
               callbacks=callbacks,
-              validation_data=(x_test, y_test))
+              validation_data=(x_val, y_val))
     tf.saved_model.save(model, f'models/mnist/{args.name}-final')
+    acc = model.evaluate(x_test, y_test, verbose=0)
+    print("Accuracy")
+    print(acc)
     print('All done :)')
