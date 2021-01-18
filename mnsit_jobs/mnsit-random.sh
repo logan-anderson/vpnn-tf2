@@ -1,6 +1,6 @@
 #SBATCH --cpus-per-task=6   # maximum CPU cores per GPU request: 6 on Cedar, 16 on Graham.
 #SBATCH --mem=32000M        # memory per node
-#SBATCH --time=0-6:00      # time (DD-HH:MM)
+#SBATCH --time=06:00      # time (DD-HH:MM)
 #SBATCH --output=mnist-normal-random-chebyshev-adam-batch-128-layers-1-rotatiosn-2-dropout-.2%N-%j.out  # %N for node name, %j forjobID
 #SBATCH --gres=gpu:v100:1 
 
