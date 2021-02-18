@@ -101,7 +101,7 @@ ax.plot([i + 1 for i in range(total)],
 ax.plot([i + 1 for i in range(total)], [random_acc]*total,
         label='Random Permutations')
 ax.set(xlabel="max range", ylabel="Test Accuracy",
-       title=f"Layers={n_layers} Rotations={n_rotations}, {perm_text} Permutations",
+       title=f"Fashion MNIST, Layers={n_layers} Rotations={n_rotations}, {perm_text} Permutations",
        label=f'{perm_text}  Permutations'
        )
 
@@ -112,7 +112,7 @@ now = datetime.now()
 
 
 # save data
-file_name = f'./img/plot_layers = {n_layers}_rotations = {n_rotations}_{perm_text.replace(" ","_")}_permutations-{now.strftime("%Y-%m-%d %H:%M:%S")}'
+file_name = f'./img/FASHION-plot_layers = {n_layers}_rotations = {n_rotations}_{perm_text.replace(" ","_")}_permutations-{now.strftime("%Y-%m-%d %H:%M:%S")}'
 fig.savefig(f"{file_name}.png")
 with open(f'{file_name}.json', 'w') as outfile:
     json.dump({
