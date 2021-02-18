@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 from datetime import datetime
 import json
 
-from donwload_util import load_mnist_stash
+from donwload_util import load_mnist_fasion_stash, load_mnist_stash
 
 PrintCallback = tf.keras.callbacks.LambdaCallback(
     on_epoch_begin=None,  on_epoch_end=lambda epoch, logs: print(f"epoch: {epoch}, accuracy:{logs['accuracy']} loss: {logs['loss']}, val_loss: {logs['val_loss']} val_accuracy: {logs['val_accuracy']}" + '\n'), on_batch_begin=None, on_batch_end=None,
@@ -25,7 +25,7 @@ total = args.total_runs
 dropout = args.dropout
 total_epochs = args.epochs
 # data prep
-(x_train, y_train), (x_test, y_test) = load_mnist_stash()
+(x_train, y_train), (x_test, y_test) = load_mnist_fasion_stash()
 
 x_train = x_train.reshape(-1, 28*28) / 255
 x_test = x_test.reshape(-1, 28*28) / 255
